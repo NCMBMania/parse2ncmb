@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 // index.js
 (function(global) {
     "use strict";
