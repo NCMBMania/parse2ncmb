@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// index.js
+// parse2ncmb.js
 (function(global) {
     "use strict";
 
