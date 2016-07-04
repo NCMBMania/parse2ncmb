@@ -1,8 +1,8 @@
 { 
   "name": "parse2ncmb",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Import data to NCMB from exported files of Parse.com",
-  "main": "index.js",
+  "main": "parse2ncmb.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,7 +11,7 @@
       , "config": "*"
       , "js-yaml": "*"
       , "JSONStream": "*"
-      , "event-system": "*"
+      , "commander": "~2.9.0"
   },
   "author": "KOYAMA Tetsuji koyhoge@gmail.com",
   "license": "Apache"
