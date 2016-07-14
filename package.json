@@ -12,6 +12,7 @@
       , "js-yaml": "*"
       , "JSONStream": "*"
       , "commander": "~2.9.0"
+      , "globule": "~1.0.0"
   },
   "author": "KOYAMA Tetsuji koyhoge@gmail.com",
   "license": "Apache"
