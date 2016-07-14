@@ -5,6 +5,7 @@
 
     var Configfile = require('config')
       , fs = require('fs')
+      , globule = require('globule')
       , JSONStream = require('JSONStream')
       , NCMB = require('ncmb')
       , program = require('commander')
@@ -16,11 +17,22 @@
 	.usage('[options] <directory>')
 	.parse(process.argv);
 
+    if (!program.args.length) {
+	program.help();
+	return;
+    }
+    let targetDir = program.args[0];
+    // trim tailing '/'
+    if (targetDir[targetDir.length - 1] == '/') {
+	targetDir = targetDir.slice(0, -1);
+    }
+    let files = globule.find(targetDir + '/*');
+
     // initialize NCMB
     let app_key = Configfile.config.app_key;
     let client_key = Configfile.config.client_key;
-
     var ncmb = new NCMB(app_key, client_key);
+
     var converter = new Converter(ncmb, 'installation');
 
     let file = 'export/_Installation.json';
