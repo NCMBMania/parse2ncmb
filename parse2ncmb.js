@@ -52,11 +52,19 @@
 
     files.forEach(function(path) {
 	let file = path.replace(/.*\//, '');
-	let type = 'object';
+	let type, name;
 	if (typemap[file] !== undefined) {
 	    type = typemap[file];
+	    name = '';
+	} else {
+	    type = 'object';
+	    let match = file.match(/(.*)\.json$/);
+	    if (match === null) {
+		return;
+	    }
+	    name = match[1];
 	}
-	var converter = new Converter(ncmb, type);
+	var converter = new Converter(ncmb, type, name);
 
 	fs.createReadStream(path)
 	    .pipe(JSONStream.parse('results.*'))
