@@ -10,17 +10,25 @@
       , NCMB = require('ncmb')
       , program = require('commander')
       , Converter = require('./lib/converter')
+      , throat = require('throat')
     ;
 
     // handling command-line
     program.version('0.0.1')
 	.usage('[options] <directory>')
+	.option('-c, --concurrency <number>', 'Set parallel concurrency',
+		parseInt)
 	.parse(process.argv);
 
     if (!program.args.length) {
 	program.help();
 	return;
     }
+    var concurrency = 3; // default
+    if (program.concurrency != undefined) {
+	concurrency = program.concurrency;
+    }
+
     let targetDir = program.args[0];
     // trim tailing '/'
     if (targetDir[targetDir.length - 1] == '/') {
@@ -53,11 +61,14 @@
 	fs.createReadStream(path)
 	    .pipe(JSONStream.parse('results.*'))
 	    .on('data', function(data) {
-		converter
-		    .convert(data)
+		converter.convert(data)
 		    .then(function(results) {
 			console.log('***');
-		    });
+		    })
+		    .catch(function(err) {
+			console.log(err);
+		    })
+		;
 	    });
     });
     return;
