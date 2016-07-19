@@ -33,16 +33,33 @@
     let client_key = Configfile.config.client_key;
     var ncmb = new NCMB(app_key, client_key);
 
-    var converter = new Converter(ncmb, 'installation');
+    var typemap = {
+	'_Installation.json': 'installation'
+	, '_Join:roles:_Role.json': 'join_roles'
+	, '_Join:users:_Role.json': 'join_users'
+	, '_Product.json': 'product'
+	, '_Role.json': 'role'
+	, '_User.json': 'user'
+    }
 
-    let file = 'export/_Installation.json';
+    files.forEach(function(path) {
+	let file = path.replace(/.*\//, '');
+	let type = 'object';
+	if (typemap[file] !== undefined) {
+	    type = typemap[file];
+	}
+	var converter = new Converter(ncmb, type);
 
-    fs.createReadStream(file)
-	.pipe(JSONStream.parse('results.*'))
-	.on('data', function(data) {
-	    converter.convert(data);
-	    console.log('***');
-	})
-    ;
+	fs.createReadStream(path)
+	    .pipe(JSONStream.parse('results.*'))
+	    .on('data', function(data) {
+		converter
+		    .convert(data)
+		    .then(function(results) {
+			console.log('***');
+		    });
+	    });
+    });
+    return;
 
 })((this || 0).self || global);
