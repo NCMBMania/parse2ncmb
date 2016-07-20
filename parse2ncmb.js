@@ -41,6 +41,8 @@
     let client_key = Configfile.config.client_key;
     var ncmb = new NCMB(app_key, client_key);
 
+    var Parallel = throat(Promise)(concurrency);
+
     var typemap = {
 	'_Installation.json': 'installation'
 	, '_Join:roles:_Role.json': 'join_roles'
@@ -69,13 +71,15 @@
 	fs.createReadStream(path)
 	    .pipe(JSONStream.parse('results.*'))
 	    .on('data', function(data) {
-		converter.convert(data)
-		    .then(function(results) {
-			console.log('***');
-		    })
-		    .catch(function(err) {
-			console.log(err);
-		    })
+		Parallel(function() {
+		    return converter.convert(data)
+		})
+		.then(function(results) {
+		    // something on success?
+		})
+		.catch(function(err) {
+		    console.log(err);
+		})
 		;
 	    });
     });
