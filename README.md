@@ -41,6 +41,8 @@ $ ./parse2ncmb <parseデータを展開したディレクトリ>
 
 NCMBダッシュボードでデータが登録されていることを確認して下さい。
 
+## Copyright
+see ./LICENSE.txt
 
 
 
