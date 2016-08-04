@@ -11,12 +11,13 @@ $ git clone git@github.com:NCMBMania/parse2ncmb.git
 * 移行先のNCMBアプリの app_key/client_key を config/default.yaml に登録します。
   * config-dist.yaml に雛形がありますので、それをコピーして使うと良いでしょう。
 ```
-$ cd config
+$ cd parse2ncmb/config
 $ cp config-dist.yaml config.yaml
 $ vi config.yaml
 ```
 * npm モジュールをインストールします。
 ```
+$ cd ..
 $ npm install
 ```
 
