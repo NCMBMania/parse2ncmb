@@ -1,4 +1,4 @@
-{ 
+{
   "name": "parse2ncmb",
   "version": "0.0.1",
   "description": "Import data to NCMB from exported files of Parse.com",
@@ -7,13 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-      "ncmb": "~2.1.1"
-      , "config": "*"
-      , "js-yaml": "*"
-      , "JSONStream": "*"
-      , "commander": "~2.9.0"
-      , "globule": "~1.0.0"
-      , "throat": "~3.0.0"
+    "JSONStream": "*",
+    "commander": "~2.9.0",
+    "config": "*",
+    "globule": "~1.0.0",
+    "js-yaml": "*",
+    "ncmb": "~2.1.1",
+    "nedb": "^1.8.0",
+    "throat": "~3.0.0"
   },
   "author": "KOYAMA Tetsuji koyhoge@gmail.com",
   "license": "Apache"
