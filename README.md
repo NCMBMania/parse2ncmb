@@ -9,6 +9,12 @@
 $ git clone repository
 ```
 * 移行先のNCMBアプリの app_key/client_key を config/default.yaml に登録します。
+  * config-dist.yaml に雛形がありますので、それをコピーして使うと良いでしょう。
+```
+$ cd config
+$ cp config-dist.yaml config.yaml
+$ vi config.yaml
+```
 * npm モジュールをインストールします。
 ```
 $ npm install
