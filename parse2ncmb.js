@@ -45,8 +45,6 @@
 
     var typemap = {
 	'_Installation.json': 'installation'
-	, '_Join:roles:_Role.json': 'join_roles'
-	, '_Join:users:_Role.json': 'join_users'
 	, '_Product.json': 'product'
 	, '_Role.json': 'role'
 	, '_User.json': 'user'
@@ -55,7 +53,12 @@
     files.forEach(function(path) {
 	let file = path.replace(/.*\//, '');
 	let type, name;
-	if (typemap[file] !== undefined) {
+
+	let joinPrefix = '_Join:';
+	if (file.substr(0, joinPrefix.length) === joinPrefix) {
+	    type = 'join';
+	    name = file;
+	} else if (typemap[file] !== undefined) {
 	    type = typemap[file];
 	    name = '';
 	} else {
