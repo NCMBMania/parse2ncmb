@@ -36,25 +36,19 @@
     }
     let files = globule.find(targetDir + '/*');
 
-    // initialize NCMB
-    let app_key = Configfile.config.app_key;
-    let client_key = Configfile.config.client_key;
-    var ncmb = new NCMB(app_key, client_key);
-
-    var Parallel = throat(Promise)(concurrency);
-
-    var typemap = {
-	'_Installation.json': 'installation'
-	, '_Product.json': 'product'
-	, '_Role.json': 'role'
-	, '_User.json': 'user'
-    }
-
-    files.forEach(function(path) {
-	let file = path.replace(/.*\//, '');
-	let type, name;
-
+    let getPathInfo = function(path) {
+	let typemap = {
+	    '_Installation.json': 'installation'
+	    , '_Product.json': 'product'
+	    , '_Role.json': 'role'
+	    , '_User.json': 'user'
+	};
 	let joinPrefix = '_Join:';
+	let type = null;
+	let name = null;
+
+	let file = path.replace(/.*\//, '');
+
 	if (file.substr(0, joinPrefix.length) === joinPrefix) {
 	    type = 'join';
 	    name = file;
@@ -65,11 +59,52 @@
 	    type = 'object';
 	    let match = file.match(/(.*)\.json$/);
 	    if (match === null) {
-		return;
+		type = null;
+	    } else {
+		name = match[1];
 	    }
-	    name = match[1];
 	}
-	var converter = new Converter(ncmb, type, name);
+	return {
+	    path: path
+	    , file: file
+	    , type: type
+	};
+    }
+
+    // sort for 'join' type will be end of array
+    files.sort(function(a, b) {
+	let pi_a = getPathInfo(a);
+	let pi_b = getPathInfo(b);
+
+	if (pi_a.type == 'join') {
+	    if (pi_b.type == 'join') {
+		return a - b;
+	    } else {
+		return 1;
+	    }
+	} else {
+	    if (pi_b.type == 'join') {
+		return -1;
+	    } else {
+		return a - b;
+	    }
+	}
+    });
+
+    // initialize NCMB
+    let app_key = Configfile.config.app_key;
+    let client_key = Configfile.config.client_key;
+    var ncmb = new NCMB(app_key, client_key);
+
+    var Parallel = throat(Promise)(concurrency);
+
+    files.forEach(function(path) {
+	let pathinfo = getPathInfo(path);
+	if (pathinfo.type === null) {
+	    return;
+	}
+
+	var converter = new Converter(ncmb, pathinfo.type, pathinfo.name);
 
 	fs.createReadStream(path)
 	    .pipe(JSONStream.parse('results.*'))
