@@ -71,22 +71,27 @@
 	};
     }
 
-    // sort for 'join' type will be end of array
-    files.sort(function(a, b) {
-	let pi_a = getPathInfo(a);
-	let pi_b = getPathInfo(b);
+    var fileInfos = [];
+    files.forEach(function(path) {
+	let info = getPathInfo(path);
+	if (info.type !== null) {
+	    fileInfos.push(info);
+	}
+    });
 
-	if (pi_a.type == 'join') {
-	    if (pi_b.type == 'join') {
-		return a - b;
+    // sort for 'join' type will be end of array
+    fileInfos.sort(function(a, b) {
+	if (a.type == 'join') {
+	    if (b.type == 'join') {
+		return a.path - b.path;
 	    } else {
 		return 1;
 	    }
 	} else {
-	    if (pi_b.type == 'join') {
+	    if (b.type == 'join') {
 		return -1;
 	    } else {
-		return a - b;
+		return a.path - b.path;
 	    }
 	}
     });
@@ -98,15 +103,10 @@
 
     var Parallel = throat(Promise)(concurrency);
 
-    files.forEach(function(path) {
-	let pathinfo = getPathInfo(path);
-	if (pathinfo.type === null) {
-	    return;
-	}
+    fileInfos.forEach(function(info) {
+	var converter = new Converter(ncmb, info.type, info.name);
 
-	var converter = new Converter(ncmb, pathinfo.type, pathinfo.name);
-
-	fs.createReadStream(path)
+	fs.createReadStream(info.path)
 	    .pipe(JSONStream.parse('results.*'))
 	    .on('data', function(data) {
 		Parallel(function() {
