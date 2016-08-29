@@ -68,6 +68,7 @@
 	    path: path
 	    , file: file
 	    , type: type
+	    , name: name
 	};
     }
 
