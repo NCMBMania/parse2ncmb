@@ -41,10 +41,25 @@ $ unzip xxxxxxxx-xxxxxxx_export.zip
 
 parse2ncmb ディレクトリに移動して、ツールを起動します。
 
+### DataObject のインポート
+
+オブジェクトIDの変換処理のために2段階に分けて実行します。
+まずはID変換の必要のない DataObject 等のインポートを行います。
+
 ```
 $ cd parse2ncmb
-$ ./parse2ncmb <parseデータを展開したディレクトリ>
+$ ./parse2ncmb --phase 1 <parseデータを展開したディレクトリ>
 ```
+
+### Relation, Pointer のインポート
+
+次にID変換の必要なリレーション、ポインター等のインポートを行います。
+
+```
+$ cd parse2ncmb
+$ ./parse2ncmb --phase 2 <parseデータを展開したディレクトリ>
+```
+
 
 NCMBダッシュボードでデータが登録されていることを確認して下さい。
 
