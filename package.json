@@ -12,6 +12,7 @@
     "config": "*",
     "globule": "~1.0.0",
     "js-yaml": "*",
+    "log-update": "^1.0.2",
     "ncmb": "~2.1.1",
     "nedb": "^1.8.0",
     "throat": "~3.0.0"
