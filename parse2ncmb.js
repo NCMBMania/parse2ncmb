@@ -11,6 +11,7 @@
       , program = require('commander')
       , Converter = require('./lib/converter')
       , ObjMapper = require('./lib/objmapper')
+      , PointerQueue = require('./lib/pointerqueue')
       , throat = require('throat')
     ;
 
@@ -106,6 +107,7 @@
     let client_key = Configfile.config.client_key;
     var ncmb = new NCMB(app_key, client_key);
     var objMapper = new ObjMapper;
+    var pointerQueue = new PointerQueue;
 
     var Parallel = throat(Promise)(concurrency);
 
@@ -114,6 +116,7 @@
 	// Phase 1: store objects
 	targetFiles = objFiles;
 	objMapper.reset();
+	pointerQueue.reset();
     } else {
 	// Phase 2: store relations and others
 	targetFiles = relFiles;
@@ -121,7 +124,8 @@
     }
 
     targetFiles.forEach(function(info) {
-	var converter = new Converter(ncmb, info.type, info.name, objMapper);
+	var converter = new Converter(ncmb, info.type, info.name,
+				      objMapper, pointerQueue);
 
 	fs.createReadStream(info.path)
 	    .pipe(JSONStream.parse('results.*'))
