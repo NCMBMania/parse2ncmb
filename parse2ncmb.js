@@ -129,12 +129,14 @@
 		Parallel(function() {
 		    return converter.convert(data)
 		})
-		.then(function(results) {
-		})
 		.catch(function(err) {
 		    console.error(err);
 		});
+	    })
+	    .on('end', function() {
+		console.log(info.name + ' done.');
 	    });
+
     });
 
 })((this || 0).self || global);
