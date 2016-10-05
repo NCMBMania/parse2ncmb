@@ -12,6 +12,7 @@
       , Converter = require('./lib/converter')
       , ObjMapper = require('./lib/objmapper')
       , PointerQueue = require('./lib/pointerqueue')
+      , PointerSaver = require('./lib/pointersaver')
       , throat = require('throat')
     ;
 
@@ -108,6 +109,7 @@
     var ncmb = new NCMB(app_key, client_key);
     var objMapper = new ObjMapper;
     var pointerQueue = new PointerQueue;
+    var pointerSaver = new PointerSaver(ncmb, objMapper);
 
     var Parallel = throat(Promise)(concurrency);
 
@@ -121,6 +123,7 @@
 	// Phase 2: store relations and others
 	targetFiles = relFiles;
 	objMapper.ensureIndex();
+	retrievePointer(pointerQueue, pointerSaver);
     }
 
     targetFiles.forEach(function(info) {
@@ -142,5 +145,18 @@
 	    });
 
     });
+
+    function retrievePointer(pointerQueue, pointerSaver) {
+	pointerQueue
+	    .all()
+	    .then(function(values) {
+		values.forEach(function(val) {
+		    pointerSaver.retrieve(val);
+		});
+	    })
+	    .catch(function(err) {
+		console.error(err);
+	    });
+    }
 
 })((this || 0).self || global);
